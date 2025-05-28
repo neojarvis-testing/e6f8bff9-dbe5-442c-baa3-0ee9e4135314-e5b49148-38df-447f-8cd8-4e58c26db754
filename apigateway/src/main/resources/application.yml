@@ -1,8 +1,31 @@
 spring:
   application:
     name: api-gateway
-  
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: 
+ 
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes: 
+        - id: user-service-login
+          uri: lb://user-service
+          predicates: 
+            - Path=/api/login
+            # - Path=/api/register
+        - id: user-service-register
+          uri: lb://user-service
+          predicates: 
+            # - Path=/api/login
+            - Path=/api/register
+ 
+        # - id: feedback-service
+        #   uri: lb://feedback-service
+        #   predicates: 
+        #     - Path=/api/feedback/**
+ 
+ 
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
